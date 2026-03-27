@@ -3,18 +3,24 @@
 set -eu
 
 ARCH=$(uname -m)
-VERSION=$(pacman -Q PACKAGENAME | awk '{print $2; exit}') # example command to get version of application here
+VERSION=$(pacman -Q oolite | awk '{print $2; exit}') # example command to get version of application here
 export ARCH VERSION
 export OUTPATH=./dist
 export ADD_HOOKS="self-updater.bg.hook"
 export UPINFO="gh-releases-zsync|${GITHUB_REPOSITORY%/*}|${GITHUB_REPOSITORY#*/}|latest|*$ARCH.AppImage.zsync"
-export ICON=PATH_OR_URL_TO_ICON
-export DESKTOP=PATH_OR_URL_TO_DESKTOP_ENTRY
+export ICON=/usr/share/oolite/Resources/Textures/oolite-logo1.png
+export DESKTOP=/usr/share/applications/oolite.desktop
+export DEPLOY_OPENGL=1
+export DEPLOY_SDL=1
 
 # Deploy dependencies
-quick-sharun /PATH/TO/BINARY_AND_LIBRARIES_HERE
+quick-sharun ./AppDir/bin/oolite /usr/share/espeak-ng-data
 
-# Additional changes can be done in between here
+echo '#!/bin/false
+mkdir -p ~/.Oolite/AddOns ~/GNUstep/Library/ApplicationSupport/Oolite/ManagedAddOns
+ESPEAK_DATA_PATH=$APPDIR/share/espeak-ng-data
+export ESPEAK_DATA_PATH
+' > ./AppDir/bin/oolite-pre-launch.src.hook
 
 # Turn AppDir into AppImage
 quick-sharun --make-appimage
