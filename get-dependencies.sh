@@ -15,7 +15,10 @@ get-debloated-pkgs --add-common --prefer-nano
 # Comment this out if you need an AUR package
 make-aur-package oolite
 
-# If the application needs to be manually built that has to be done down here
+mkdir -p ./AppDir/bin
+cp -r /usr/share/oolite/* ./AppDir/bin
+# this doesn't seem to be used by the aur package
+rm -f ./AppDir/bin/run_oolite.sh
 
 # if you also have to make nightly releases check for DEVEL_RELEASE = 1
 #
